@@ -1,4 +1,4 @@
-from selenium import webdriver
+
 import pytest
 import allure
 from selenium.webdriver.support.ui import WebDriverWait

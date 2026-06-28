@@ -1,3 +1,4 @@
+from selenium import webdriver
 import pytest
 import allure
 from selenium.webdriver.common.by import By
