@@ -1,12 +1,17 @@
-from selenium import webdriver
+
+# import pytest
+# import allure
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+# from pages.order_page import QAScooterPraktikumServices
+
 import pytest
 import allure
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pages.order_page import QAScooterPraktikumServices
+from pages.order_page import OrderPage
 
-
-class TestOrderForm:
+class TestOrderFormAndLogo:
     test_data = [
         {
             "name": "Иван",
@@ -16,11 +21,11 @@ class TestOrderForm:
             "date": "02.06.2026",
         },
     ]
-    @allure.title("Создать заказ и проверить всплывающее сообщение")
 
+    @allure.title("Создать заказ и проверить всплывающее сообщение")
     @pytest.mark.parametrize("order_data", test_data)
     def test_create_order(self, driver, order_data):
-        page = QAScooterPraktikumServices(driver)
+        page = OrderPage(driver)
 
         page.click_order_button()
         page.enter_name(order_data["name"])
@@ -37,13 +42,13 @@ class TestOrderForm:
 
     @allure.title("Логотип Самоката ведет на главную страницу")
     def test_logo_scooter_goes_home(self, driver):
-        page = QAScooterPraktikumServices(driver)
+        page = OrderPage(driver)
         page.select_scooter_img()
         assert driver.current_url == "https://qa-scooter.praktikum-services.ru/"
 
     @allure.title("Логотип Яндекса открывает Дзен в новом окне")
     def test_logo_yandex_opens_zen(self, driver):
-        page = QAScooterPraktikumServices(driver)
+        page = OrderPage(driver)
         old_windows = driver.window_handles
         page.select_yandex_img()
         WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(len(old_windows) + 1))

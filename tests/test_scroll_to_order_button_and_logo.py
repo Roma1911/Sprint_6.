@@ -1,12 +1,18 @@
 
+# import pytest
+# import allure
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+# from pages.order_page import QAScooterPraktikumServices
+
 import pytest
 import allure
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pages.order_page import QAScooterPraktikumServices
+from pages.order_page import OrderPage
 
+class TestOrderWithScrollAndLogo:
 
-class TestOrderForm2:
     test_data = [
         {
             "name": "Роман",
@@ -21,7 +27,7 @@ class TestOrderForm2:
 
     @pytest.mark.parametrize("order_data", test_data)
     def test_create_order(self, driver, order_data):
-        page = QAScooterPraktikumServices(driver)
+        page = OrderPage(driver)
         
         page.scroll_to_button_middle()
         page.click_order_middle_button()
@@ -38,15 +44,32 @@ class TestOrderForm2:
         page.click_yes_button()
         assert page.is_success_message_visible()
 
+    # @allure.title("Логотип Самоката ведет на главную страницу")
+    # def test_logo_scooter_goes_home(self, driver):
+    #     page = OrderPage(driver)
+    #     page.click_scooter_logo()
+    #     assert page.get_current_url() == "https://qa-scooter.praktikum-services.ru/"
+
+    # @allure.title("Логотип Яндекса открывает Дзен в новом окне")
+    # def test_logo_yandex_opens_zen(self, driver):
+    #     page = OrderPage(driver)
+    #     old_windows = page.get_window_handles()
+    #     page.click_yandex_logo()
+    #     WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(len(old_windows) + 1))
+    #     new_window = [w for w in page.get_window_handles() if w not in old_windows][0]
+    #     page.switch_to_window(new_window)
+    #     WebDriverWait(driver, 10).until(lambda d: d.current_url != "about:blank")
+    #     assert "zen" in driver.current_url.lower() or "zen" in driver.title.lower()
+
     @allure.title("Логотип Самоката ведет на главную страницу")
     def test_logo_scooter_goes_home(self, driver):
-        page = QAScooterPraktikumServices(driver)
+        page = OrderPage(driver)
         page.select_scooter_img()
         assert driver.current_url == "https://qa-scooter.praktikum-services.ru/"
 
     @allure.title("Логотип Яндекса открывает Дзен в новом окне")
     def test_logo_yandex_opens_zen(self, driver):
-        page = QAScooterPraktikumServices(driver)
+        page = OrderPage(driver)
         old_windows = driver.window_handles
         page.select_yandex_img()
         WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(len(old_windows) + 1))

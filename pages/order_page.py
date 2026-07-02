@@ -1,90 +1,86 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
 import allure
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from pages.base_page import BasePage
+from locators import OrderScooterLocators
 
 
-class QAScooterPraktikumServices:
-    ORDER_BUTTON = (By.CLASS_NAME, "Button_Button__ra12g")
-    NAME_INPUT = (By.CSS_SELECTOR, 'input[placeholder="* Имя"]')
-    FAMILY_INPUT = (By.CSS_SELECTOR, 'input[placeholder="* Фамилия"]')
-    STATION_INPUT = (By.CSS_SELECTOR, 'input[placeholder="* Станция метро"]')
-    STATION_DROPDOWN_ITEM = (By.XPATH, "//div[@class='select-search__select']//div[text()='Бульвар Рокоссовского']")
-    TELEPHONE_INPUT = (By.CSS_SELECTOR, 'input[placeholder="* Телефон: на него позвонит курьер"]')
-    NEXT_BUTTON = (By.XPATH, "//button[text()='Далее' and contains(@class, 'Button_Button__ra12g')]")
-    DELIVERY_DATE_FIELD = (By.CSS_SELECTOR, 'input[placeholder="* Когда привезти самокат"]')
-    RENTAL_PERIOD = (By.CLASS_NAME, "Dropdown-control")
-    RENTAL_PERIOD_ONE_DAY = (By.XPATH, "//div[contains(@class, 'Dropdown-option') and normalize-space()='сутки']")
-    COLOR_SECTION = (By.CLASS_NAME, "Order_Checkboxes__3lWSI")
-    BLACK_COLOR = (By.ID, 'black')
-    BUTTON_MIDDLE = (By.XPATH, "//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Заказать']")
-    BUTTON_YES = (By.XPATH, "//button[normalize-space()='Да']")
-    BUTTON_STATUS = (By.XPATH, "//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Посмотреть статус']")
-    SUCCESS_MESSAGE = (By.XPATH, "//div[contains(text(), 'Заказ оформлен')]")
-    SCOOTER_IMG = (By.CSS_SELECTOR, "img[src='/assets/scooter.svg'][alt='Scooter']")
-    YANDEX_IMG = (By.CSS_SELECTOR, "img[src='/assets/ya.svg'][alt='Yandex']")
+class OrderPage(BasePage):
 
     def __init__(self, driver):
-        self.driver = driver
-        self.wait = WebDriverWait(driver, 15)
+        super().__init__(driver, "https://qa-scooter.praktikum-services.ru/")
 
     @allure.step("Прокручиваем до кнопки Заказать")
     def scroll_to_button_middle(self):
-        element = self.driver.find_element(*self.BUTTON_MIDDLE)
-        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        self.scroll_to_element(OrderScooterLocators.BUTTON_MIDDLE)
 
+    @allure.step("Кликаем кнопку Заказать")
     def click_order_button(self):
-        self.driver.find_element(*self.ORDER_BUTTON).click()
+        self.click(OrderScooterLocators.ORDER_BUTTON)
 
+    @allure.step("Вводим имя")
     def enter_name(self, name):
-        self.driver.find_element(*self.NAME_INPUT).send_keys(name)
+        self.send_keys(OrderScooterLocators.NAME_INPUT, name)
 
+    @allure.step("Вводим фамилию")
     def enter_family(self, family):
-        self.driver.find_element(*self.FAMILY_INPUT).send_keys(family)
+        self.send_keys(OrderScooterLocators.FAMILY_INPUT, family)
 
+    # @allure.step("Выбираем станцию метро")
+    # def enter_station(self, station):
+    #     station_input = self.wait.until(EC.visibility_of_element_located(OrderScooterLocators.STATION_INPUT))
+    #     station_input.click()
+    #     station_input.send_keys(station)
+    #     self.wait.until(
+    #         EC.visibility_of_element_located((By.XPATH, f"//div[@class='select-search__select']//div[text()='{station}']"))).click()
+    
+    @allure.step("Выбираем станцию метро")
     def enter_station(self, station):
-        station_input = self.wait.until(EC.visibility_of_element_located(self.STATION_INPUT))
-        station_input.click()
-        station_input.send_keys(station)
-        self.wait.until(
-        EC.visibility_of_element_located((By.XPATH, f"//div[@class='select-search__select']//div[text()='{station}']"))).click()
+        self.send_keys(OrderScooterLocators.STATION_INPUT, station)
+        station_dropdown_locator = (By.XPATH, f"//div[@class='select-search__select']//div[text()='{station}']")
+        self.click(station_dropdown_locator)
 
+    @allure.step("Вводим телефон")
     def enter_phone(self, phone):
-        self.driver.find_element(*self.TELEPHONE_INPUT).send_keys(phone)
+        self.send_keys(OrderScooterLocators.TELEPHONE_INPUT, phone)
 
+    @allure.step("Кликаем кнопку Далее")
     def click_next_button(self):
-        self.driver.find_element(*self.NEXT_BUTTON).click()
+        self.click(OrderScooterLocators.NEXT_BUTTON)
 
+    @allure.step("Вводим дату доставки")
     def enter_delivery_date(self, date):
-        date_input = self.wait.until(EC.element_to_be_clickable(self.DELIVERY_DATE_FIELD))
+        date_input = self.wait.until(EC.element_to_be_clickable(OrderScooterLocators.DELIVERY_DATE_FIELD))
         date_input.click()
         date_input.send_keys(date)
-        self.driver.find_element(By.TAG_NAME, "body").click()
+        self.click_body()
 
+    @allure.step("Выбираем период аренды 1 сутки")
     def select_rental_period_one_day(self):
-        self.wait.until(EC.element_to_be_clickable(self.RENTAL_PERIOD)).click()
-        self.wait.until(EC.element_to_be_clickable(self.RENTAL_PERIOD_ONE_DAY)).click()
+        self.click(OrderScooterLocators.RENTAL_PERIOD)
+        self.click(OrderScooterLocators.RENTAL_PERIOD_ONE_DAY)
 
+    @allure.step("Выбираем чёрный цвет")
     def select_black_color(self):
-        self.driver.find_element(*self.BLACK_COLOR).click()
+        self.click(OrderScooterLocators.BLACK_COLOR)
 
+    @allure.step("Кликаем кнопку Заказать внизу")
     def click_order_middle_button(self):
-        self.wait.until(EC.element_to_be_clickable(self.BUTTON_MIDDLE)).click()
-   
+        self.click(OrderScooterLocators.BUTTON_MIDDLE)
+
+    @allure.step("Кликаем кнопку Да")
     def click_yes_button(self):
-        yes = (By.XPATH, "//button[normalize-space()='Да']")
-        self.wait.until(EC.presence_of_element_located(yes))
-        self.wait.until(EC.element_to_be_clickable(yes)).click()
+        self.click(OrderScooterLocators.BUTTON_YES)
 
-    def select_button_status(self):
-        self.driver.find_element(*self.BUTTON_STATUS).click()
-
+    @allure.step("Проверяем видимость сообщения об успехе")
     def is_success_message_visible(self):
-        return self.wait.until(EC.visibility_of_element_located(self.SUCCESS_MESSAGE)).is_displayed()
+        return self.is_visible(OrderScooterLocators.SUCCESS_MESSAGE)
 
+    @allure.step("Кликаем логотип самоката")
     def select_scooter_img(self):
-        self.driver.find_element(*self.SCOOTER_IMG).click()
+        self.click(OrderScooterLocators.SCOOTER_IMG)
 
+    @allure.step("Кликаем логотип Яндекса")
     def select_yandex_img(self):
-        self.driver.find_element(*self.YANDEX_IMG).click()
+        self.click(OrderScooterLocators.YANDEX_IMG)
