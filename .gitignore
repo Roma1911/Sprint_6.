@@ -1,0 +1,6 @@
+allure-results/
+pycache/
+*.pyc
+
+venv/
+__pycache__/
