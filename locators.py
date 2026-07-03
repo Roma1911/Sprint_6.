@@ -1,6 +1,5 @@
 from selenium.webdriver.common.by import By
 
-
 class ScooterLocators:
     
     ARROWS = [
@@ -35,7 +34,6 @@ class ScooterLocators:
         'Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.',
         'Да, обязательно. Всем самокатов! И Москве, и Московской области.',
     ]
-
 
 
 class OrderScooterLocators:
