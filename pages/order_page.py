@@ -43,7 +43,7 @@ class OrderPage(BasePage):
 
     @allure.step("Вводим дату доставки")
     def enter_delivery_date(self, date):
-        date_input = self.wait.until(EC.element_to_be_clickable(OrderScooterLocators.DELIVERY_DATE_FIELD))
+        date_input = self.find_element(OrderScooterLocators.DELIVERY_DATE_FIELD)
         date_input.click()
         date_input.send_keys(date)
         self.click_body()
@@ -85,8 +85,12 @@ class OrderPage(BasePage):
     def is_zen_opened_in_new_window(self):
         old_windows = self.get_window_handles()
         self.select_yandex_img()
-        WebDriverWait(self.driver, 10).until(EC.number_of_windows_to_be(len(old_windows) + 1))
+        self.wait_for_new_window(old_windows)
         new_window = [w for w in self.get_window_handles() if w not in old_windows][0]
         self.switch_to_window(new_window)
-        WebDriverWait(self.driver, 10).until(lambda d: d.current_url != "about:blank")
+        self.wait_for_url_not_blank()
         return "zen" in self.get_current_url().lower() or "zen" in self.get_page_title().lower()
+        
+       
+    
+    

@@ -64,6 +64,10 @@ class BasePage:
     def get_current_url(self):
         return self.driver.current_url
     
+    @allure.step("Получает заголовок страницы")
+    def get_page_title(self):
+        return self.driver.title
+
     @allure.step("Получает все открытые окна")
     def get_window_handles(self):
         return self.driver.window_handles
@@ -75,3 +79,11 @@ class BasePage:
     @allure.step("Кликает по body")
     def click_body(self):
         self.click((By.TAG_NAME, "body"))
+
+    @allure.step("Ждёт новое окно")
+    def wait_for_new_window(self, old_windows):
+        self.wait.until(EC.number_of_windows_to_be(len(old_windows) + 1))
+    
+    @allure.step("Ждёт, что URL не blank")
+    def wait_for_url_not_blank(self):
+        self.wait.until(lambda d: d.current_url != "about:blank")
