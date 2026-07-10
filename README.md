@@ -1,5 +1,23 @@
-ОПИСАНИЕ ПРОЕКТА Проверка сервиса qa-scooter.praktikum-services с применением автоматизированного тестирования на pytest и selenium, включает в себя:
+Запуск тестов:
+    # Запустить все тесты из файла
+    pytest tests/test_arrow.py -v
+    pytest tests/test_order_and_scroll.py -v
+    pytest tests/test_logo.py -v
 
-Тестовые сценарии
+    # Запустить тесты с отчётом Allure
+    pytest tests/test_arrow.py --alluredir=./allure-results
+    allure serve ./allure-results
 
-Выпадающий список в разделе «Вопросы о важном». Тебе нужно проверить: при нажатии на стрелку открывается соответствующий текст. Важно написать отдельный тест для каждого вопроса. Заказ самоката. Нужно проверить весь положительный сценарий с двумя наборами данных. Проверить точки входа в сценарий, их две: кнопка «Заказать» вверху страницы и внизу. Из чего состоит позитивный сценарий: Нажать кнопку «Заказать». На странице две кнопки заказа. Заполнить форму заказа. Проверить, что появилось всплывающее окно с сообщением об успешном создании заказа. Проверить: если нажать на логотип «Самоката», вы попадете на главную страницу «Самоката». Проверить: если нажать на логотип Яндекса, в новом окне через редирект откроется главная страница Дзена. Нужно написать тесты с разными данными: минимум два набора. Какие именно данные использовать — на ваше усмотрение. Сценарий общий, несмотря на разные точки входа: не нужно тестировать каждую из них дважды.
+    pytest tests/test_order_and_scroll.py --alluredir=./allure-results
+    allure serve ./allure-results
+
+    pytest tests/test_logo.py --alluredir=./allure-results
+    allure serve ./allure-results
+    
+    # Запустить конкретный тест
+    pytest tests/test_arrow.py::TestDropDownList::test_check_arrow_text[0] -v
+
+    pytest tests/test_order_and_scroll.py::TestOrder::test_create_order_via_top_button -v
+
+    pytest tests/test_logo.py::TestLogo::test_logo_scooter_goes_home -v
+
